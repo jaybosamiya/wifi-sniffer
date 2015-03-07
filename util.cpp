@@ -21,6 +21,16 @@ void set_debug_on() {
   verbose_flag = 1;
 }
 
+void error(const char * fmt, ...) {
+  va_list argp;
+
+  va_start(argp, fmt);
+  vsnprintf(TEMPOUT, sizeof(TEMPOUT), fmt, argp);
+  va_end(argp);
+
+  cerr << TEMPOUT << endl;
+}
+
 void verbose(const char * fmt, ...) {
   va_list argp;
 

@@ -4,6 +4,8 @@
 void set_verbose_on();
 void set_debug_on();
 
+void error(const char * fmt, ...);
+
 void verbose(const char * fmt, ...);
 void debug(const char * fmt, ...);
 

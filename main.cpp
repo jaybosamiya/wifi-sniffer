@@ -12,6 +12,15 @@ static int help_flag = 0;
 static char * interface = 0;
 
 int main(int argc, char ** argv) {
+
+  if ( geteuid() ) {
+    help_flag = true;
+  }
+
+  if ( argc == 1 ) {
+    help_flag = true;
+  }
+
   // Option parsing loop
   while (1) {
     int c;
@@ -47,7 +56,10 @@ int main(int argc, char ** argv) {
     cerr << "Usage: " << argv[0] << " [options] interface\n"
             "  -v, --verbose : Output more information\n"
             "  -d, --debug   : Show debugging information\n"
-            "  -h, --help    : Show this help text\n";
+            "  -h, --help    : Show this help text\n"
+            "\n"
+            "Note: This program needs to be run as root\n"
+    ;
     return 0;
   }
 

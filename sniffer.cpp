@@ -17,5 +17,8 @@ void initialize(char * interface) {
   handle = pcap_open_live(interface, BUFSIZ, 1, 1000, errbuf);
   if (handle == NULL) {
     debug("Couldn't open interface %s",interface);
+    abort();
   }
+
+  debug("Opened interface %s",interface);
 }

@@ -3,6 +3,7 @@
 #include <getopt.h>
 #include <cstring>
 #include "util.h"
+#include "sniffer.h"
 
 using namespace std;
 
@@ -84,6 +85,8 @@ int main(int argc, char ** argv) {
   if ( debug_flag ) {
     set_debug_on();
   }
+
+  initialize(interface);
 
   return 0;
 }

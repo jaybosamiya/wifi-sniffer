@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include <getopt.h>
 #include <cstring>
-#include <pcap.h>
+#include "util.h"
 
 using namespace std;
 
@@ -75,6 +75,14 @@ int main(int argc, char ** argv) {
   if ( ! interface ) {
     cerr << "No interface specified. Try " << argv[0] << " -h for help. Quitting.\n";
     return -1;
+  }
+
+  if ( verbose_flag ) {
+    set_verbose_on();
+  }
+
+  if ( debug_flag ) {
+    set_debug_on();
   }
 
   return 0;

@@ -18,6 +18,7 @@ void set_verbose_on() {
 
 void set_debug_on() {
   debug_flag = 1;
+  verbose_flag = 1;
 }
 
 void verbose(const char * fmt, ...) {
@@ -37,7 +38,7 @@ void debug(const char * fmt, ...) {
 
   va_start(argp, fmt);
   vsnprintf(TEMPOUT, sizeof(TEMPOUT), fmt, argp);
-  va_end(argp);
+  va_end(argp); 
 
   if ( debug_flag ) {
     cerr << TEMPOUT << endl;

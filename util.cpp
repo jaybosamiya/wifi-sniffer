@@ -20,7 +20,7 @@ void set_debug_on() {
   debug_flag = 1;
 }
 
-void verbose(char * fmt, ...) {
+void verbose(const char * fmt, ...) {
   va_list argp;
 
   va_start(argp, fmt);
@@ -32,7 +32,7 @@ void verbose(char * fmt, ...) {
   }
 }
 
-void debug(char * fmt, ...) {
+void debug(const char * fmt, ...) {
   va_list argp;
 
   va_start(argp, fmt);

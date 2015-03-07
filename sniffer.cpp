@@ -8,7 +8,7 @@ static pcap_t *handle = NULL;
 
 void initialize(char * interface) {
   if ( handle ) {
-    debug("Trying to reinitialize using interface %s",interface);
+    error("Trying to reinitialize using interface %s",interface);
     abort();
   }
 
@@ -16,9 +16,10 @@ void initialize(char * interface) {
 
   handle = pcap_open_live(interface, BUFSIZ, 1, 1000, errbuf);
   if (handle == NULL) {
-    debug("Couldn't open interface %s",interface);
+    error("Couldn't open interface %s",interface);
     abort();
   }
 
-  debug("Opened interface %s",interface);
+  verbose("Opened interface %s.",interface);
+  debug("Datalink is %d.",pcap_datalink(handle));
 }

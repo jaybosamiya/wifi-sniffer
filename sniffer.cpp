@@ -82,3 +82,7 @@ void handlePacket(const u_char* packet) {
     handleMAC(packet+4+(i*6),i);
   }
 }
+
+void capture_packets() {
+  // TODO
+}

@@ -87,6 +87,7 @@ int main(int argc, char ** argv) {
   }
 
   initialize(interface);
+  capture_packets();
 
   return 0;
 }

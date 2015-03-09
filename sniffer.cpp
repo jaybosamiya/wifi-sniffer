@@ -3,6 +3,7 @@
 #include "util.h"
 #include <cstdlib>
 #include <cstring>
+#include <ctime>
 #include <string>
 #include <pcap.h>
 
@@ -67,6 +68,7 @@ void handleMAC(const u_char * mac, int pos) {
     sprintf(mac_c_str,"%s%02X",mac_c_str,mac[i]);
   }
   string mac_str(mac_c_str);
+  debug("MAC %d : %s",pos,mac_c_str);
   // TODO: Add to the buckets
 }
 
@@ -78,11 +80,27 @@ void handlePacket(const u_char* packet) {
 
   // TODO: Check if the +4 should come after this line or before (during the PRISM skip)
 
-  for ( int i = 0 ; i < 3 ; i++ ) {
+  for ( int i = 0 ; i < 4 ; i++ ) {
     handleMAC(packet+4+(i*6),i);
   }
 }
 
+class Timer {
+  clock_t start_time;
+public:
+  void reset() { start_time = clock(); }
+  float get_time() {
+    return (float(clock()-start_time)/CLOCKS_PER_SEC);
+  }
+  Timer() { reset(); }
+};
+
+const float max_time = 10;
+
 void capture_packets() {
-  // TODO
+  static Timer timer;
+  while ( timer.get_time() < max_time ) {
+    pcap_pkthdr header;
+    handlePacket(pcap_next(handle, &header));
+  }
 }

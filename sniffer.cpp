@@ -70,7 +70,7 @@ void handleMAC(const u_char * mac, int pos) {
   // TODO: Add to the buckets
 }
 
-void handlePacket(const u_char* packet, int len) {
+void handlePacket(const u_char* packet) {
   if ( datalink ==	DLT_PRISM_HEADER ) {
     prism_header* rth1 = (prism_header*)(packet);
     packet = packet + rth1->msglen;

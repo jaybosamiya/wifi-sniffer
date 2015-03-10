@@ -1,6 +1,6 @@
 const int num_channels = 12;
 const float max_time = 60;
-const float round_time = 12;
+const float round_time = max_time/5;
 
 #include "sniffer.h"
 #include "protocol_headers.h"

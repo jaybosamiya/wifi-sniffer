@@ -186,7 +186,11 @@ void recalculate_probs() {
 void capture_packets() {
   Timer timer;
   switch_to_next_channel();
-  while ( timer.get_time() < max_time ) {
+  bool end_of_capturing = false;
+  while ( true ) {
+    if ( timer.get_time() >= max_time ) {
+      end_of_capturing = true;
+    }
     pcap_pkthdr header;
     handlePacket(pcap_next(handle, &header));
     debug("<<<Channel timer: %f; Total timer: %f>>>",ch_time.get_time(),timer.get_time());
@@ -197,6 +201,9 @@ void capture_packets() {
     }
     if ( is_round_over ) {
       recalculate_probs();
+      if ( end_of_capturing ) {
+        break;
+      }
     }
   }
 }

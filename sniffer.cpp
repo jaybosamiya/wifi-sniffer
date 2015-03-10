@@ -116,11 +116,26 @@ void handlePacket(const u_char* packet) {
 }
 
 class Timer {
-  clock_t start_time;
+  timespec start_time;
+
+  float diff(timespec start, timespec end) {
+	  timespec temp;
+	  if ((end.tv_nsec-start.tv_nsec)<0) {
+		  temp.tv_sec = end.tv_sec-start.tv_sec-1;
+		  temp.tv_nsec = 1000000000+end.tv_nsec-start.tv_nsec;
+	  } else {
+		  temp.tv_sec = end.tv_sec-start.tv_sec;
+		  temp.tv_nsec = end.tv_nsec-start.tv_nsec;
+	  }
+    return (float)temp.tv_sec + 1e-9 * temp.tv_nsec;
+  }
+
 public:
-  void reset() { start_time = clock(); }
+  void reset() { clock_gettime(CLOCK_MONOTONIC_COARSE,&start_time); }
   float get_time() {
-    return (float(clock()-start_time)/CLOCKS_PER_SEC);
+    timespec temp;
+    clock_gettime(CLOCK_MONOTONIC_COARSE,&temp);
+    return diff(start_time,temp);
   }
   Timer() { reset(); }
 };
@@ -166,6 +181,7 @@ void recalculate_probs() {
 void capture_packets() {
   Timer timer;
   Timer channel_timer;
+  switch_to_next_channel();
   while ( timer.get_time() < max_time ) {
     pcap_pkthdr header;
     handlePacket(pcap_next(handle, &header));

@@ -10,6 +10,7 @@ const float round_time = max_time/5;
 #include <string>
 #include <pcap.h>
 #include <map>
+#include <set>
 #include <iostream>
 
 using namespace std;
@@ -187,6 +188,10 @@ void capture_packets() {
 
 void print_info() {
   cout << "\n\n";
+  int overall_total_mac_count = 0;
+  int overall_total_packets_captured = 0;
+  float overall_total_time = 0;
+  set<string> overall_macs;
   for ( int i = 1 ; i <= num_channels ; i++ ) {
     int total_unique_mac_count = 0;
     int total_mac_count = 0;
@@ -197,7 +202,8 @@ void print_info() {
     for ( int j = 0 ; j < 4 ; j++ ) {
       for ( map<string,int>::iterator it = mac_count[i][j].begin() ; it != mac_count[i][j].end() ; it++ ) {
         channel_mac_counts[it->first] += it->second;
-     }
+        overall_macs.insert(it->first);
+      }
     }
     for ( map<string,int>::iterator it = channel_mac_counts.begin() ; it != channel_mac_counts.end() ; it++ ) {
       if ( is_verbose() ) {
@@ -212,7 +218,16 @@ void print_info() {
     cout << " Total packets captured     = " << channel_packets[i] << endl;
     cout << " Packet capture rate        = " << (channel_packets[i]/channel_time[i]) << " packets/sec" << endl;
     cout << "\n";
+    overall_total_mac_count += total_mac_count;
+    overall_total_packets_captured += channel_packets[i];
+    overall_total_time += channel_time[i];
   }
+  cout << "Overall:\n";
+  cout << " Number of unique MACs seen = " << overall_macs.size() << endl;
+  cout << " Total number of MACs seen  = " << overall_total_mac_count << endl;
+  cout << " Total packets captured     = " << overall_total_packets_captured << endl;
+  cout << " Packet capture rate        = " << overall_total_packets_captured/overall_total_time << " packets/sec" << endl;
+  cout << "\n";
 }
 
 // TODO: Make sure that pcap_next doesn't take too long

@@ -3,7 +3,6 @@
 #include "util.h"
 #include <cstdlib>
 #include <cstring>
-#include <ctime>
 #include <string>
 #include <pcap.h>
 #include <map>
@@ -146,31 +145,6 @@ void handlePacket(const u_char* packet, int length) {
 
   channel_packets[current_channel]++;
 }
-
-class Timer {
-  timespec start_time;
-
-  float diff(timespec start, timespec end) {
-	  timespec temp;
-	  if ((end.tv_nsec-start.tv_nsec)<0) {
-		  temp.tv_sec = end.tv_sec-start.tv_sec-1;
-		  temp.tv_nsec = 1000000000+end.tv_nsec-start.tv_nsec;
-	  } else {
-		  temp.tv_sec = end.tv_sec-start.tv_sec;
-		  temp.tv_nsec = end.tv_nsec-start.tv_nsec;
-	  }
-    return (float)temp.tv_sec + 1e-9 * temp.tv_nsec;
-  }
-
-public:
-  void reset() { clock_gettime(CLOCK_MONOTONIC_COARSE,&start_time); }
-  float get_time() {
-    timespec temp;
-    clock_gettime(CLOCK_MONOTONIC_COARSE,&temp);
-    return diff(start_time,temp);
-  }
-  Timer() { reset(); }
-};
 
 void change_channel(int channel) {
   if ( channel < 1 || channel > num_channels ) {

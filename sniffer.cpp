@@ -202,6 +202,9 @@ void print_info() {
   float overall_total_time = 0;
   set<string> overall_macs;
   for ( int i = 1 ; i <= num_channels ; i++ ) {
+    if ( channel_packets[i] == 0 ) {
+      continue;
+    }
     int total_unique_mac_count = 0;
     int total_mac_count = 0;
     if ( is_verbose() ) {

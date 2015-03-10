@@ -101,6 +101,10 @@ void handleMAC(const u_char * mac, int pos) {
 }
 
 void handlePacket(const u_char* packet) {
+  if ( packet == NULL ) {
+    return;
+  }
+
   if ( datalink ==	DLT_PRISM_HEADER ) {
     prism_header* rth1 = (prism_header*)(packet);
     packet = packet + rth1->msglen;

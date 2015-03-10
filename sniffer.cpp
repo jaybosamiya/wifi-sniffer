@@ -153,9 +153,10 @@ void change_channel(int channel) {
   verbose("Changed to channel %d",channel);
 }
 
+static Timer ch_time;
+
 bool switch_to_next_channel() {
   bool ret = (current_channel==num_channels);
-  static Timer ch_time;
   channel_time[current_channel]+=ch_time.get_time();
   change_channel((current_channel % num_channels) + 1);
   ch_time.reset();
@@ -180,16 +181,15 @@ void recalculate_probs() {
 
 void capture_packets() {
   Timer timer;
-  Timer channel_timer;
   switch_to_next_channel();
   while ( timer.get_time() < max_time ) {
     pcap_pkthdr header;
     handlePacket(pcap_next(handle, &header));
-    debug("<<<Channel timer: %f; Total timer: %f>>>",channel_timer.get_time(),timer.get_time());
+    debug("<<<Channel timer: %f; Total timer: %f>>>",ch_time.get_time(),timer.get_time());
     bool is_round_over;
-    if ( channel_timer.get_time() > channel_prob[current_channel] * round_time ) {
+    if ( ch_time.get_time() > channel_prob[current_channel] * round_time ) {
       is_round_over = switch_to_next_channel();
-      channel_timer.reset();
+      ch_time.reset();
     }
     if ( is_round_over ) {
       recalculate_probs();
@@ -197,5 +197,4 @@ void capture_packets() {
   }
 }
 
-// TODO: Use only one timer for the channels
 // TODO: Make sure that pcap_next doesn't take too long

@@ -247,5 +247,4 @@ void print_info() {
   cout << "\n";
 }
 
-// TODO: Make sure that pcap_next doesn't take too long
 // TODO: Output timetamps for each MAC in debug mode

@@ -21,7 +21,27 @@ int current_channel = 0;
 void set_monitor_mode(char * iface) {
   interface = iface;
   char * const argv[] = {(char*)("iwconfig"),iface,(char*)("mode"),(char*)("monitor"),0};
-  run_command(argv);
+  int ret = run_command(argv);
+  if ( ret ) {
+    debug("Probably on an Ubuntu system. Trying to set monitor using ifconfig technique.");
+    char * const ifconfig_down[] = {(char*)("ifconfig"),iface,(char*)("down"),0};
+    char * const ifconfig_up[] = {(char*)("ifconfig"),iface,(char*)("up"),0};
+    ret = run_command(ifconfig_down);
+    if ( ret ) {
+      error("Interface error. Quitting.");
+      abort();
+    }
+    ret = run_command(argv);
+    if ( ret ) {
+      error("Interface error. Quitting.");
+      abort();
+    }
+    ret = run_command(ifconfig_up);
+    if ( ret ) {
+      error("Interface error. Quitting.");
+      abort();
+    }
+  }
 }
 
 const float max_time = 60;

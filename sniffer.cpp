@@ -1,3 +1,7 @@
+const int num_channels = 12;
+const float max_time = 60;
+const float round_time = 12;
+
 #include "sniffer.h"
 #include "protocol_headers.h"
 #include "util.h"
@@ -14,8 +18,13 @@ static pcap_t *handle = NULL;
 static int datalink;
 char * interface;
 
-const int num_channels = 12;
 int current_channel = 0;
+
+float channel_prob[num_channels+1];
+float channel_time[num_channels+1];
+int channel_packets[num_channels+1];
+
+map<string,int> mac_count[num_channels+1][4];
 
 void set_monitor_mode(char * iface) {
   interface = iface;
@@ -42,13 +51,6 @@ void set_monitor_mode(char * iface) {
     }
   }
 }
-
-const float max_time = 60;
-const float round_time = 12;
-
-float channel_prob[num_channels+1];
-float channel_time[num_channels+1];
-int channel_packets[num_channels+1];
 
 void initialize(char * interface) {
   if ( handle ) {
@@ -77,8 +79,6 @@ void initialize(char * interface) {
     channel_packets[i] = 0;
   }
 }
-
-map<string,int> mac_count[num_channels+1][4];
 
 void handleMAC(const u_char * mac, int pos) {
   char mac_c_str[13];

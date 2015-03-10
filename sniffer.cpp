@@ -168,7 +168,7 @@ void recalculate_probs() {
   float speed[num_channels+1];
   float total_speed = 0;
   for ( int i = 1 ; i <= num_channels ; i++ ) {
-    debug("Packets on channel %02d = %d",i,channel_packets);
+    debug("Packets on channel %02d = %d",i,channel_packets[i]);
     speed[i] = channel_packets[i]/channel_time[i];
     speed[i] += min_speed_adder;
     total_speed += speed[i];

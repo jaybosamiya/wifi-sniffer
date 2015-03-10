@@ -27,7 +27,7 @@ const float max_time = 10;
 const float round_time = 1;
 
 float channel_prob[num_channels+1];
-int channel_time[num_channels+1];
+float channel_time[num_channels+1];
 int channel_packets[num_channels+1];
 
 void initialize(char * interface) {
@@ -50,6 +50,12 @@ void initialize(char * interface) {
 
   verbose("Opened interface %s.",interface);
   debug("Datalink is %d.", datalink);
+
+  for ( int i = 1 ; i <= num_channels ; i++ ) {
+    channel_prob[i] = 1.0/num_channels;
+    channel_time[i] = 0;
+    channel_packets[i] = 0;
+  }
 }
 
 struct ieee80211_radiotap_header {
@@ -129,6 +135,7 @@ void change_channel(int channel) {
   sprintf(channel_no,"%d",channel);
   char * const argv[] = {(char*)"iwconfig",interface,(char*)"channel",channel_no,0};
   run_command(argv);
+  verbose("Changed to channel %d",channel);
 }
 
 bool switch_to_next_channel() {
@@ -162,6 +169,7 @@ void capture_packets() {
   while ( timer.get_time() < max_time ) {
     pcap_pkthdr header;
     handlePacket(pcap_next(handle, &header));
+    debug("<<<Channel timer: %f; Total timer: %f>>>",channel_timer.get_time(),timer.get_time());
     bool is_round_over;
     if ( channel_timer.get_time() > channel_prob[current_channel] * round_time ) {
       is_round_over = switch_to_next_channel();

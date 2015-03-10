@@ -1,5 +1,5 @@
 #include "sniffer.h"
-
+#include "protocol_headers.h"
 #include "util.h"
 #include <cstdlib>
 #include <cstring>
@@ -77,35 +77,6 @@ void initialize(char * interface) {
     channel_packets[i] = 0;
   }
 }
-
-struct ieee80211_radiotap_header {
-        u_int8_t        it_version;     /* set to 0 */
-        u_int8_t        it_pad;
-        u_int16_t       it_len;         /* entire length */
-        u_int32_t       it_present;     /* fields present */
-} __attribute__((__packed__));
-
-struct prism_value{
-  u_int32_t did;
-  u_int16_t status;
-  u_int16_t len;
-  u_int32_t data;
-};
-
-struct prism_header{
-  u_int32_t msgcode;
-  u_int32_t msglen;
-  prism_value hosttime;
-  prism_value mactime;
-  prism_value channel;
-  prism_value rssi;
-  prism_value sq;
-  prism_value signal;
-  prism_value noise;
-  prism_value rate;
-  prism_value istx;
-  prism_value frmlen;
-};
 
 map<string,int> mac_count[num_channels+1][4];
 

@@ -28,9 +28,10 @@ int main(int argc, char ** argv) {
 
     static struct option long_options[] =
       {
-        {"verbose", no_argument, &verbose_flag, 1},
-        {"debug"  , no_argument, &debug_flag  , 1},
-        {"help"   , no_argument, &help_flag   , 1},
+        {"timestamp", no_argument, &timestamp_flag, 1},
+        {"verbose"  , no_argument, &verbose_flag  , 1},
+        {"debug"    , no_argument, &debug_flag    , 1},
+        {"help"     , no_argument, &help_flag     , 1},
         {0, 0, 0, 0}
       };
     int option_index = 0;
@@ -55,9 +56,10 @@ int main(int argc, char ** argv) {
 
   if (help_flag) {
     cerr << "Usage: " << argv[0] << " [options] interface\n"
-            "  -v, --verbose : Output more information\n"
-            "  -d, --debug   : Show debugging information\n"
-            "  -h, --help    : Show this help text\n"
+            "  -t, --timestamp : Show timestamps for the MACs detected\n"
+            "  -v, --verbose   : Output more information\n"
+            "  -d, --debug     : Show debugging information\n"
+            "  -h, --help      : Show this help text\n"
             "\n"
             "Note: This program needs to be run as root\n"
     ;

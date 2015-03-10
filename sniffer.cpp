@@ -42,7 +42,7 @@ void initialize(char * interface) {
 
   handle = pcap_open_live(interface, BUFSIZ, 1, 1000, errbuf);
   if (handle == NULL) {
-    error("Couldn't open interface %s",interface);
+    error("Couldn't open interface %s. Error: %s",interface,errbuf);
     abort();
   }
 

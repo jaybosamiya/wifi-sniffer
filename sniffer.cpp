@@ -159,12 +159,10 @@ void change_channel(int channel) {
 
 static Timer ch_time;
 
-bool switch_to_next_channel() {
-  bool ret = (current_channel==num_channels);
+void switch_to_next_channel() {
   channel_time[current_channel]+=ch_time.get_time();
   change_channel((current_channel % num_channels) + 1);
   ch_time.reset();
-  return ret;
 }
 
 void recalculate_probs() {
@@ -194,16 +192,15 @@ void capture_packets() {
     pcap_pkthdr header;
     handlePacket(pcap_next(handle, &header));
     debug("<<<Channel timer: %f; Total timer: %f>>>",ch_time.get_time(),timer.get_time());
-    bool is_round_over = false;
-    if ( ch_time.get_time() > channel_prob[current_channel] * round_time ) {
-      is_round_over = switch_to_next_channel();
-      ch_time.reset();
-    }
-    if ( is_round_over ) {
+    if ( current_channel==num_channels ) {
       recalculate_probs();
       if ( end_of_capturing ) {
         break;
       }
+    }
+    if ( ch_time.get_time() > channel_prob[current_channel] * round_time ) {
+      switch_to_next_channel();
+      ch_time.reset();
     }
   }
 }

@@ -186,7 +186,7 @@ void capture_packets() {
     pcap_pkthdr header;
     handlePacket(pcap_next(handle, &header));
     debug("<<<Channel timer: %f; Total timer: %f>>>",ch_time.get_time(),timer.get_time());
-    bool is_round_over;
+    bool is_round_over = false;
     if ( ch_time.get_time() > channel_prob[current_channel] * round_time ) {
       is_round_over = switch_to_next_channel();
       ch_time.reset();

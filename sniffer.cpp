@@ -27,6 +27,8 @@ int channel_packets[num_channels+1];
 
 map<string,int> mac_count[num_channels+1][4];
 
+multimap<string,string> mac_timestamp;
+
 void set_monitor_mode(char * iface) {
   interface = iface;
   char * const argv[] = {(char*)("iwconfig"),iface,(char*)("mode"),(char*)("monitor"),0};
@@ -94,6 +96,8 @@ void handleMAC(const u_char * mac, int pos) {
   }
   string mac_str(mac_c_str);
   mac_count[current_channel][pos][mac_str]++;
+  time_t t = time(NULL);
+  mac_timestamp.insert(make_pair(mac_str,string(ctime(&t))));
   debug("MAC %d : %s",pos,mac_c_str);
 }
 
@@ -239,6 +243,14 @@ void print_info() {
   if ( suppressed ) {
     cout << "Note: Output for empty channels suppressed.\n";
   }
+  bool must_show_timestamps = true; // temp
+  if ( must_show_timestamps ) {
+    cout << "\nTimestamps: \n";
+    for ( multimap<string,string>::iterator it = mac_timestamp.begin() ; it != mac_timestamp.end() ; it++ ) {
+      cout << "  " << it->first << " : " << it->second;
+    }
+    cout << "\n";
+  }
   cout << "Overall:\n";
   cout << " Number of unique MACs seen = " << overall_macs.size() << endl;
   cout << " Total number of MACs seen  = " << overall_total_mac_count << endl;
@@ -246,5 +258,3 @@ void print_info() {
   cout << " Packet capture rate        = " << overall_total_packets_captured/overall_total_time << " packets/sec" << endl;
   cout << "\n";
 }
-
-// TODO: Output timetamps for each MAC in debug mode

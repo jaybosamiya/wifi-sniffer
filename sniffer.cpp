@@ -23,8 +23,8 @@ void set_monitor_mode(char * iface) {
   run_command(argv);
 }
 
-const float max_time = 10;
-const float round_time = 1;
+const float max_time = 60;
+const float round_time = 12;
 
 float channel_prob[num_channels+1];
 float channel_time[num_channels+1];
@@ -196,3 +196,6 @@ void capture_packets() {
     }
   }
 }
+
+// TODO: Use only one timer for the channels
+// TODO: Make sure that pcap_next doesn't take too long

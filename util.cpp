@@ -64,7 +64,7 @@ void debug(const char * fmt, ...) {
   }
 }
 
-void run_command(char * const argv[]) {
+int run_command(char * const argv[]) {
   debug("Running program %s",argv[0]);
 
   pid_t p = fork();
@@ -72,10 +72,12 @@ void run_command(char * const argv[]) {
   if ( p == 0 ) {
     if ( execvp(argv[0],argv) ) {
       error("Error during execution of %s",argv[0]);
+      abort();
     }
   } else {
     int status;
     waitpid(p,&status,0);
     debug("%s returned value %d",argv[0],status);
+    return status;
   }
 }

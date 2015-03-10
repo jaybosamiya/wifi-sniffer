@@ -201,8 +201,10 @@ void print_info() {
   int overall_total_packets_captured = 0;
   float overall_total_time = 0;
   set<string> overall_macs;
+  bool suppressed = false;
   for ( int i = 1 ; i <= num_channels ; i++ ) {
     if ( channel_packets[i] == 0 ) {
+      suppressed = true;
       continue;
     }
     int total_unique_mac_count = 0;
@@ -233,6 +235,9 @@ void print_info() {
     overall_total_mac_count += total_mac_count;
     overall_total_packets_captured += channel_packets[i];
     overall_total_time += channel_time[i];
+  }
+  if ( suppressed ) {
+    cout << "Note: Output for empty channels suppressed.\n";
   }
   cout << "Overall:\n";
   cout << " Number of unique MACs seen = " << overall_macs.size() << endl;

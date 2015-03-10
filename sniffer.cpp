@@ -159,8 +159,12 @@ void change_channel(int channel) {
 
 static Timer ch_time;
 
-void switch_to_next_channel() {
+void mark_time() {
   channel_time[current_channel]+=ch_time.get_time();
+}
+
+void switch_to_next_channel() {
+  mark_time();
   change_channel((current_channel % num_channels) + 1);
   ch_time.reset();
 }
@@ -185,22 +189,23 @@ void capture_packets() {
   Timer timer;
   switch_to_next_channel();
   bool end_of_capturing = false;
+  bool end_of_round = false;
   while ( true ) {
     if ( timer.get_time() >= max_time ) {
       end_of_capturing = true;
     }
     pcap_pkthdr header;
     handlePacket(pcap_next(handle, &header));
-    debug("<<<Channel timer: %f; Total timer: %f>>>",ch_time.get_time(),timer.get_time());
-    if ( current_channel==num_channels ) {
-      recalculate_probs();
-      if ( end_of_capturing ) {
-        break;
-      }
-    }
+    debug("<<<Channel %02d timer: %f; Total timer: %f>>>",current_channel,ch_time.get_time(),timer.get_time());
     if ( ch_time.get_time() > channel_prob[current_channel] * round_time ) {
+      if ( current_channel==num_channels ) {
+        mark_time();
+        recalculate_probs();
+        if ( end_of_capturing ) {
+          break;
+        }
+      }
       switch_to_next_channel();
-      ch_time.reset();
     }
   }
 }

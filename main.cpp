@@ -28,7 +28,7 @@ int main(int argc, char ** argv) {
 
     static struct option long_options[] =
       {
-        {"timestamp", no_argument, &timestamp_flag, 1},
+        {"macstat"  , no_argument, &macstat_flag  , 1},
         {"verbose"  , no_argument, &verbose_flag  , 1},
         {"debug"    , no_argument, &debug_flag    , 1},
         {"help"     , no_argument, &help_flag     , 1},
@@ -56,7 +56,7 @@ int main(int argc, char ** argv) {
 
   if (help_flag) {
     cerr << "Usage: " << argv[0] << " [options] interface\n"
-            "  -t, --timestamp : Show timestamps for the MACs detected\n"
+            "  -m, --macstat   : Show number of detections of each MAC and timestamps\n"
             "  -v, --verbose   : Output more information\n"
             "  -d, --debug     : Show debugging information\n"
             "  -h, --help      : Show this help text\n"

@@ -15,7 +15,7 @@ const float round_time = max_time/5;
 
 using namespace std;
 
-int timestamp_flag = 0;
+int macstat_flag = 0;
 
 static pcap_t *handle = NULL;
 static int datalink;
@@ -245,7 +245,7 @@ void print_info() {
   if ( suppressed ) {
     cout << "Note: Output for empty channels suppressed.\n";
   }
-  if ( timestamp_flag ) {
+  if ( macstat_flag ) {
     cout << "\nTimestamps: \n";
     for ( multimap<string,string>::iterator it = mac_timestamp.begin() ; it != mac_timestamp.end() ; it++ ) {
       cout << "  " << it->first << " : " << it->second;

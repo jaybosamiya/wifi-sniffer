@@ -69,6 +69,11 @@ void initialize(char * interface) {
     abort();
   }
 
+  if ( pcap_setnonblock(handle,1,errbuf) == -1 ) {
+    error("Couldn't set to non-blocking mode. Error: %s",errbuf);
+    abort();
+  }
+
   datalink = pcap_datalink(handle);
 
   verbose("Opened interface %s.",interface);
@@ -161,6 +166,10 @@ void recalculate_probs() {
   verbose("Recalculated time allotted per channel (Greater time for busier channels)");
 }
 
+void callback(u_char *user,const struct pcap_pkthdr* pkthdr,const u_char* packet) {
+  handlePacket(packet,pkthdr->len);
+}
+
 void capture_packets() {
   Timer timer;
   switch_to_next_channel();
@@ -170,9 +179,9 @@ void capture_packets() {
     if ( timer.get_time() >= max_time ) {
       end_of_capturing = true;
     }
-    pcap_pkthdr header;
-    handlePacket(pcap_next(handle, &header),header.len);
-    debug("<<<Channel %02d timer: %f; Total timer: %f>>>",current_channel,ch_time.get_time(),timer.get_time());
+    if ( pcap_dispatch(handle,1,callback,NULL) ) {
+      debug("<<<Channel %02d timer: %f; Total timer: %f>>>",current_channel,ch_time.get_time(),timer.get_time());
+    }
     if ( ch_time.get_time() > channel_prob[current_channel] * round_time ) {
       if ( current_channel==num_channels ) {
         mark_time();

@@ -101,7 +101,7 @@ void handleMAC(const u_char * mac, int pos) {
   debug("MAC %d : %s",pos,mac_c_str);
 }
 
-void handlePacket(const u_char* packet) {
+void handlePacket(const u_char* packet, int length) {
   if ( packet == NULL ) {
     return;
   }
@@ -109,15 +109,19 @@ void handlePacket(const u_char* packet) {
   if ( datalink ==	DLT_PRISM_HEADER ) {
     prism_header* rth1 = (prism_header*)(packet);
     packet = packet + rth1->msglen;
+    length -= rth1->msglen;
   }
 
   if ( datalink == DLT_IEEE802_11_RADIO ) {
     ieee80211_radiotap_header* rth2 = (ieee80211_radiotap_header*)(packet);
     packet = packet + rth2->it_len;
+    length -= rth2->it_len;
   }
 
   for ( int i = 0 ; i < 4 ; i++ ) {
-    handleMAC(packet+4+(i*6),i);
+    if ( 4+i*6 < length ) {
+      handleMAC(packet+4+(i*6),i);
+    }
   }
 
   channel_packets[current_channel]++;
@@ -201,7 +205,7 @@ void capture_packets() {
       end_of_capturing = true;
     }
     pcap_pkthdr header;
-    handlePacket(pcap_next(handle, &header));
+    handlePacket(pcap_next(handle, &header),header.len);
     debug("<<<Channel %02d timer: %f; Total timer: %f>>>",current_channel,ch_time.get_time(),timer.get_time());
     if ( ch_time.get_time() > channel_prob[current_channel] * round_time ) {
       if ( current_channel==num_channels ) {

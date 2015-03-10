@@ -4,4 +4,6 @@
 void initialize(char * interface);
 void capture_packets();
 
+void print_info();
+
 #endif

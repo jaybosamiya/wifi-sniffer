@@ -7,6 +7,7 @@
 #include <string>
 #include <pcap.h>
 #include <map>
+#include <iostream>
 
 using namespace std;
 
@@ -183,6 +184,8 @@ void recalculate_probs() {
   for ( int i = 1 ; i <= num_channels ; i++ ) {
     channel_prob[i] = speed[i] / total_speed;
   }
+
+  verbose("Recalculated time allotted per channel (Greater time for busier channels)");
 }
 
 void capture_packets() {
@@ -207,6 +210,36 @@ void capture_packets() {
       }
       switch_to_next_channel();
     }
+  }
+}
+
+void print_info() {
+  cout << "\n\n";
+  for ( int i = 1 ; i <= num_channels ; i++ ) {
+    int total_unique_mac_count = 0;
+    int total_mac_count = 0;
+    if ( is_verbose() ) {
+      cout << "Channel #" << i << ":\n";
+    }
+    map<string,int> channel_mac_counts;
+    for ( int j = 0 ; j < 4 ; j++ ) {
+      for ( map<string,int>::iterator it = mac_count[i][j].begin() ; it != mac_count[i][j].end() ; it++ ) {
+        channel_mac_counts[it->first] += it->second;
+     }
+    }
+    for ( map<string,int>::iterator it = channel_mac_counts.begin() ; it != channel_mac_counts.end() ; it++ ) {
+      if ( is_verbose() ) {
+        cout << it->first << " : " << it->second << endl;
+      }
+      total_mac_count += it->second;
+      total_unique_mac_count += 1;
+    }
+    cout << "In channel " << i << ":\n";
+    cout << " Number of unique MACs seen = " << total_unique_mac_count << endl;
+    cout << " Total number of MACs seen  = " << total_mac_count << endl;
+    cout << " Total packets captured     = " << channel_packets[i] << endl;
+    cout << " Packet capture rate        = " << (channel_packets[i]/channel_time[i]) << " packets/sec" << endl;
+    cout << "\n";
   }
 }
 

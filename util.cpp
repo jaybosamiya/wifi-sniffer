@@ -23,6 +23,13 @@ void set_debug_on() {
   verbose_flag = 1;
 }
 
+bool is_verbose() {
+  return verbose_flag;
+}
+bool is_debug() {
+  return debug_flag;
+}
+
 void error(const char * fmt, ...) {
   va_list argp;
 

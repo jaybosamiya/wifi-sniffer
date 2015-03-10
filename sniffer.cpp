@@ -111,7 +111,10 @@ void handlePacket(const u_char* packet) {
     packet = packet + rth1->msglen;
   }
 
-  // TODO: Check if the +4 should come after this line or before (during the PRISM skip)
+  if ( datalink == DLT_IEEE802_11_RADIO ) {
+    ieee80211_radiotap_header* rth2 = (ieee80211_radiotap_header*)(packet);
+    packet = packet + rth2->it_len;
+  }
 
   for ( int i = 0 ; i < 4 ; i++ ) {
     handleMAC(packet+4+(i*6),i);
@@ -244,3 +247,4 @@ void print_info() {
 }
 
 // TODO: Make sure that pcap_next doesn't take too long
+// TODO: Output timetamps for each MAC in debug mode

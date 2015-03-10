@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cstdarg>
 #include <cstdio>
+#include <cstdlib>
 #include <unistd.h>
 #include <sys/wait.h>
 

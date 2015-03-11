@@ -248,7 +248,7 @@ void print_info() {
     }
     for ( map<string,int>::iterator it = channel_mac_counts.begin() ; it != channel_mac_counts.end() ; it++ ) {
       if ( is_verbose() ) {
-        cout << it->first << " : " << it->second << endl;
+        cout << "  " << it->first << " : " << it->second << endl;
       }
       total_mac_count += it->second;
       total_unique_mac_count += 1;

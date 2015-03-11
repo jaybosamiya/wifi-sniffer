@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <getopt.h>
 #include <cstring>
+#include <cstdlib>
 #include "util.h"
 #include "sniffer.h"
 
@@ -28,10 +29,11 @@ int main(int argc, char ** argv) {
 
     static struct option long_options[] =
       {
-        {"macstat"  , no_argument, &macstat_flag  , 1},
-        {"verbose"  , no_argument, &verbose_flag  , 1},
-        {"debug"    , no_argument, &debug_flag    , 1},
-        {"help"     , no_argument, &help_flag     , 1},
+        {"macstat"  , no_argument      , &macstat_flag  ,  1},
+        {"time"     , required_argument, NULL           ,'t'},
+        {"verbose"  , no_argument      , &verbose_flag  ,  1},
+        {"debug"    , no_argument      , &debug_flag    ,  1},
+        {"help"     , no_argument      , &help_flag     ,  1},
         {0, 0, 0, 0}
       };
     int option_index = 0;
@@ -48,6 +50,10 @@ int main(int argc, char ** argv) {
       case 0:
         break;
 
+      case 't':
+        max_time = atoi(optarg);
+        break;
+
       default:
         cerr << "Invalid option. Try " << argv[0] << " -h for help. Quitting.\n";
         return -1;
@@ -57,6 +63,7 @@ int main(int argc, char ** argv) {
   if (help_flag) {
     cerr << "Usage: " << argv[0] << " [options] interface\n"
             "  -m, --macstat   : Show number of detections of each MAC and timestamps\n"
+            "  -t, --time      : Set time to run sniffer in seconds (default: 60)\n"
             "  -v, --verbose   : Output more information\n"
             "  -d, --debug     : Show debugging information\n"
             "  -h, --help      : Show this help text\n"

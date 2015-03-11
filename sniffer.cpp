@@ -1,6 +1,6 @@
 const int num_channels = 12;
-const float max_time = 60;
-const float round_time = max_time/5;
+float max_time = 60;
+float round_time;
 
 #include "sniffer.h"
 #include "protocol_headers.h"
@@ -58,6 +58,8 @@ void set_monitor_mode(char * iface) {
 }
 
 void initialize(char * interface) {
+  round_time = max_time/5.0f;
+
   if ( handle ) {
     error("Trying to reinitialize using interface %s",interface);
     abort();

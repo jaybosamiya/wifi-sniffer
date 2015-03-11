@@ -134,7 +134,7 @@ void handlePacket(const u_char* packet, int length) {
   }
 
   for ( int i = 0 ; i < 4 ; i++ ) {
-    if ( 4+i*6 < length ) {
+    if ( 9+i*6 < length ) {
       handleMAC(packet+4+(i*6),i);
     }
   }

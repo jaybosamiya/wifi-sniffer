@@ -1,3 +1,5 @@
+// Define some structures to be used for correct header decryption
+
 #ifndef PROTOCOL_HEADERS_H
 #define PROTOCOL_HEADERS_H
 

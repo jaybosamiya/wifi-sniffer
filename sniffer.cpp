@@ -1,6 +1,6 @@
+// Main Sniffer code
+
 const int num_channels = 12;
-float max_time = 60;
-float round_time;
 
 #include "sniffer.h"
 #include "protocol_headers.h"
@@ -23,6 +23,9 @@ char * interface;
 
 int current_channel = 0;
 
+float max_time = 60;
+float round_time;
+
 float channel_prob[num_channels+1];
 float channel_time[num_channels+1];
 int channel_packets[num_channels+1];
@@ -31,6 +34,8 @@ map<string,int> mac_count[num_channels+1][4];
 
 multimap<string,string> mac_timestamp;
 
+// Place the interface into monitor mode
+// Special code for Ubuntu (or similar systems) which use crazy Network Managers
 void set_monitor_mode(char * iface) {
   interface = iface;
   char * const argv[] = {(char*)("iwconfig"),iface,(char*)("mode"),(char*)("monitor"),0};
@@ -57,6 +62,8 @@ void set_monitor_mode(char * iface) {
   }
 }
 
+// Set up the interface, by setting to monitor mode, non-blocked
+// Also, initialize the globals
 void initialize(char * interface) {
   round_time = max_time/5.0f;
 
@@ -92,6 +99,8 @@ void initialize(char * interface) {
   }
 }
 
+// Convert MAC into more useful form and mark all relevant info in the
+// global structures
 void handleMAC(const u_char * mac, int pos) {
   char mac_c_str[13];
   mac_c_str[0] = 0;
@@ -105,6 +114,8 @@ void handleMAC(const u_char * mac, int pos) {
   debug("MAC %d : %s",pos,mac_c_str);
 }
 
+// Strip away extra headers, and get to the MAC addresses
+// Pass them to handleMAC
 void handlePacket(const u_char* packet, int length) {
   if ( packet == NULL ) {
     return;
@@ -131,6 +142,7 @@ void handlePacket(const u_char* packet, int length) {
   channel_packets[current_channel]++;
 }
 
+// Use run_command (defined in util.*) to change channel
 void change_channel(int channel) {
   if ( channel < 1 || channel > num_channels ) {
     error("Impossible to switch to channel %d. Quitting.",channel);
@@ -146,16 +158,19 @@ void change_channel(int channel) {
 
 static Timer ch_time;
 
+// Mark the current timing onto the channel
 void mark_time() {
   channel_time[current_channel]+=ch_time.get_time();
 }
 
+// Move to next channel and reset channel timer
 void switch_to_next_channel() {
   mark_time();
   change_channel((current_channel % num_channels) + 1);
   ch_time.reset();
 }
 
+// Re-weight the time slices
 void recalculate_probs() {
   const float min_speed_adder = 0.01;
   float speed[num_channels+1];
@@ -174,10 +189,13 @@ void recalculate_probs() {
   verbose("Recalculated time allotted per channel (Greater time for busier channels)");
 }
 
+// Change parameters to more useful form for pcap
 void callback(u_char *user,const struct pcap_pkthdr* pkthdr,const u_char* packet) {
   handlePacket(packet,pkthdr->len);
 }
 
+// Capture packets until main timer gets over
+// Keep switching channels in a timely fashion
 void capture_packets() {
   Timer timer;
   switch_to_next_channel();
@@ -203,6 +221,7 @@ void capture_packets() {
   }
 }
 
+// Display collected info in a handy format
 void print_info() {
   cout << "\n\n";
   int overall_total_mac_count = 0;

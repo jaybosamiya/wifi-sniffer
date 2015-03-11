@@ -14,7 +14,7 @@ static int help_flag = 0;
 static char * interface = 0;
 
 int main(int argc, char ** argv) {
-
+  // Make sure that only root can run this program
   if ( geteuid() ) {
     help_flag = true;
   }
@@ -95,6 +95,7 @@ int main(int argc, char ** argv) {
     set_debug_on();
   }
 
+  // Do actual work (from sniffer.* files)
   initialize(interface);
   capture_packets();
   print_info();

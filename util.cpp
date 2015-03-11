@@ -15,6 +15,8 @@ static int debug_flag = 0;
 const int BUFSIZE(200);
 static char TEMPOUT[BUFSIZE];
 
+// Flag management
+
 void set_verbose_on() {
   verbose_flag = 1;
 }
@@ -31,6 +33,7 @@ bool is_debug() {
   return debug_flag;
 }
 
+// Display error to stderr
 void error(const char * fmt, ...) {
   va_list argp;
 
@@ -41,6 +44,7 @@ void error(const char * fmt, ...) {
   cerr << TEMPOUT << endl;
 }
 
+// Display message only when verbose
 void verbose(const char * fmt, ...) {
   va_list argp;
 
@@ -53,6 +57,7 @@ void verbose(const char * fmt, ...) {
   }
 }
 
+// Display message only when debugging
 void debug(const char * fmt, ...) {
   va_list argp;
 
@@ -65,6 +70,8 @@ void debug(const char * fmt, ...) {
   }
 }
 
+// Run a command-line utility
+// Run using fork-exec combo
 int run_command(char * const argv[]) {
   debug("Running program %s",argv[0]);
 
@@ -82,6 +89,8 @@ int run_command(char * const argv[]) {
     return status;
   }
 }
+
+// Timer utilities
 
 float diff(timespec start, timespec end) {
   timespec temp;

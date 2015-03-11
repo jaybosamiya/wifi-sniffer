@@ -248,15 +248,36 @@ void print_info() {
   if ( macstat_flag ) {
     cout << "\nMAC Stats: \n";
     string prev_mac = "";
+    string prev_ts = "";
+    int ts_count = 1;
     for ( multimap<string,string>::iterator it = mac_timestamp.begin() ; it != mac_timestamp.end() ; it++ ) {
       string mac = it->first;
+      if ( it->second != prev_ts || mac != prev_mac ) {
+        if ( ts_count > 1 ) {
+          cout << " x " << ts_count;
+        }
+        ts_count = 1;
+        cout << endl;
+      } else {
+        ts_count++;
+      }
       if ( mac != prev_mac ) {
         cout << "  " << mac << " - " << mac_timestamp.count(mac) << endl;
+        ts_count = 1;
+        prev_ts = "";
       }
-      cout << "    " << it->second;
+      if ( prev_ts != it->second ) {
+        string temp = it->second;
+        temp.erase(temp.length()-1,1);
+        cout << "    " << temp;
+      }
       prev_mac = mac;
+      prev_ts = it->second;
     }
-    cout << "\n";
+    if ( ts_count > 1 ) {
+      cout << " x " << ts_count;
+    }
+    cout << "\n\n";
   }
   cout << "Overall:\n";
   cout << " Number of unique MACs seen = " << overall_macs.size() << endl;

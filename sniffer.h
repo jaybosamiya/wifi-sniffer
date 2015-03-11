@@ -1,3 +1,5 @@
+/* sniffer.h */
+
 #ifndef SNIFFER_H
 #define SNIFFER_H
 

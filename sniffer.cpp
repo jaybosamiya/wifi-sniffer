@@ -1,3 +1,5 @@
+/* sniffer.cpp */
+
 // Main Sniffer code
 
 const int num_channels = 12;

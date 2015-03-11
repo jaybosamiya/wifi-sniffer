@@ -1,3 +1,5 @@
+/* protocol_headers.h */
+
 // Define some structures to be used for correct header decryption
 
 #ifndef PROTOCOL_HEADERS_H

@@ -14,6 +14,10 @@ static int help_flag = 0;
 static char * interface = 0;
 
 int main(int argc, char ** argv) {
+  cout << "WiFi Sniffer\n"
+          "------------\tBy Jay H. Bosamiya\n"
+          "            \t------------------\n\n";
+
   // Make sure that only root can run this program
   if ( geteuid() ) {
     help_flag = true;

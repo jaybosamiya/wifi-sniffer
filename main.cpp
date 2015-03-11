@@ -67,7 +67,7 @@ int main(int argc, char ** argv) {
   if (help_flag) {
     cerr << "Usage: " << argv[0] << " [options] interface\n"
             "  -m, --macstat   : Show number of detections of each MAC and timestamps\n"
-            "  -t, --time      : Set time to run sniffer in seconds (default: 60)\n"
+            "  -t, --time t    : Run sniffer for t seconds (default: 60)\n"
             "  -v, --verbose   : Output more information\n"
             "  -d, --debug     : Show debugging information\n"
             "  -h, --help      : Show this help text\n"

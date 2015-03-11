@@ -49,7 +49,7 @@ void verbose(const char * fmt, ...) {
   va_end(argp);
 
   if ( verbose_flag ) {
-    cerr << TEMPOUT << endl;
+    cout << TEMPOUT << endl;
   }
 }
 
@@ -61,7 +61,7 @@ void debug(const char * fmt, ...) {
   va_end(argp);
 
   if ( debug_flag ) {
-    cerr << TEMPOUT << endl;
+    cout << TEMPOUT << endl;
   }
 }
 

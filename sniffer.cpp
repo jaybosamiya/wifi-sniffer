@@ -246,9 +246,15 @@ void print_info() {
     cout << "Note: Output for empty channels suppressed.\n";
   }
   if ( macstat_flag ) {
-    cout << "\nTimestamps: \n";
+    cout << "\nMAC Stats: \n";
+    string prev_mac = "";
     for ( multimap<string,string>::iterator it = mac_timestamp.begin() ; it != mac_timestamp.end() ; it++ ) {
-      cout << "  " << it->first << " : " << it->second;
+      string mac = it->first;
+      if ( mac != prev_mac ) {
+        cout << "  " << mac << " - " << mac_timestamp.count(mac) << endl;
+      }
+      cout << "    " << it->second;
+      prev_mac = mac;
     }
     cout << "\n";
   }
